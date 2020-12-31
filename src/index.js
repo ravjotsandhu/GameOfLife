@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import './App.css';
 import ReactDOM from 'react-dom';
 
-const Box = (row,col,id,selectBox,boxClass) =>{
+const Box = ({ row,col,boxClass,id,selectBox }) =>{
 	selectBox = () => {
 	  selectBox(row, col);
 	}
@@ -16,8 +16,8 @@ const Box = (row,col,id,selectBox,boxClass) =>{
   );
 }
 
-const Grid = (numCols,numRows,gridFull,selectBox) => {
-  const width = numCols * 14;
+const Grid = ({ numRows,numCols,gridFull,selectBox }) => {
+  const width = numCols * 16;
   var rowsArr = [];
   var boxClass = "";
 
@@ -54,13 +54,13 @@ const App = () => {
     const grid = Array.from({length: numRows}, () => Array.from({length: numCols}, () => 0));
     return grid;
   });
+
   return(
     <div>
       <h1>Game Of Life</h1>
       <Grid
-        gridFull={gridFull}
-        rows={numRows}
-        cols={numCols}
+        gridFull={generation}
+        numRows={numRows} numCols={numCols} 
       />
       <h2>Generations: {generation}</h2>
     </div>
