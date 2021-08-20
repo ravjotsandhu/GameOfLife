@@ -1,0 +1,22 @@
+.box {
+    flex: 1 0 auto;
+    display: inline-block;
+    border: 1px solid black;
+    width: 15px;
+    height: 15px;
+    margin: 0px;
+    /* margin-left: -1px;
+    margin-bottom: -1px; */
+}
+
+.off {
+    background-color: lightgray;
+}
+
+.on {
+    background-color: green;
+}
+
+.box:hover {
+    background: #00ccff;
+}
