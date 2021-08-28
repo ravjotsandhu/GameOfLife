@@ -14,11 +14,11 @@
 //     [-1, 0]
 // ];
 // const generateEmptyGrid = () => {
-//     const rows = [];
+//     const numRows = [];
 //     for (let i = 0; i < numRows; i++) {
-//         rows.push(Array.from(Array(numCols), () => 0));
+//         numRows.push(Array.from(Array(numCols), () => 0));
 //     }
-//     return rows;
+//     return numRows;
 // };
 // function App(){
 //     const [grid, setGrid] = useState(() => {
@@ -66,13 +66,13 @@
 //         }} > {running ? "stop" : "start"}</button>
 
 //         <button onClick={() => {
-//           const rows = [];
+//           const numRows = [];
 //           for (let i = 0; i < numRows; i++) {
-//             rows.push(
+//             numRows.push(
 //               Array.from(Array(numCols), () => (Math.random() > 0.7 ? 1 : 0))
 //             );
 //           }
-//           setGrid(rows);
+//           setGrid(numRows);
 //         }}>
 //             random
 //         </button>
@@ -88,8 +88,8 @@
 //           display: "grid",
 //           gridTemplateColumns: `repeat(${numCols}, 20px)`
 //         }}>
-//             {grid.map((rows, i) =>
-//             rows.map((col, k) => (
+//             {grid.map((numRows, i) =>
+//             numRows.map((col, k) => (
 //                 <div
 //                 key={`${i}-${k}`}
 //                 onClick={() => {
@@ -113,10 +113,12 @@
 //     );
 // };
 // ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, document.getElementById("root"));
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Grid } from "./Grid.jsx";
 const App = () => {
+  const [generation, setGeneration] = useState(0);
+  const speed = 100;
   const numRows = 30;
   const numCols = 50;
 
@@ -132,6 +134,70 @@ const App = () => {
       return prevGrid.map((row) => [...row]);
     });
   };
+const Seed = (row, col) => {
+  // const [seed, setSeed] = useState(false);
+  // const handleSeed = () => {
+  //   setSeed(!seed);
+  // };
+  for (let i = 0; i < numRows; i++) {
+			for (let j = 0; j < numCols; j++) {
+				if (Math.floor(Math.random() * 4) === 1) {
+					setGrid((prevGrid) => {
+            prevGrid[i][j] = true;
+            return prevGrid.map((i) => [...i]);
+          });
+				}
+			}
+		}
+  //   setGrid((prevGrid) =>
+  //   prevGrid.map((thing) =>
+  //     thing.map(
+  //       (prevVal) => Boolean(Math.floor(Math.random() * 4) === 1) || prevVal
+  //     )
+  //   )
+  // );
+    // return (
+  //   <div>
+  //     <button onClick={handleSeed}>{seed ? "stop" : "start"}</button>
+  //   </div>
+  // );
+ }
+ const playButton = () => {
+  const interval = setInterval(() => {
+    play();
+  }, speed);
+};
+const play = () => {
+  setGrid(grid => {
+    var g2 = [...grid];
+
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+        let count = 0;
+        if (i > 0) if (grid[i - 1][j]) count++;
+        if (i > 0 && j > 0) if (grid[i - 1][j - 1]) count++;
+        if (i > 0 && j < numCols - 1) if (grid[i - 1][j + 1]) count++;
+        if (j < numCols - 1) if (grid[i][j + 1]) count++;
+        if (j > 0) if (grid[i][j - 1]) count++;
+        if (i < numRows - 1) if (grid[i + 1][j]) count++;
+        if (i < numRows - 1 && j > 0) if (grid[i + 1][j - 1]) count++;
+        if (i < numRows - 1 && numCols - 1) if (grid[i + 1][j + 1]) count++;
+        if (grid[i][j] && (count < 2 || count > 3)) g2[i][j] = false;
+        if (!grid[i][j] && count === 3) g2[i][j] = true;
+      }
+    }
+return g2;
+});
+setGeneration(generation => generation + 1)
+};
+useEffect(() => {
+  Seed();
+  playButton();
+  // return () => {
+  //   cleanup
+  // }
+}, []);
+
 
   return (
     <div>
@@ -142,7 +208,7 @@ const App = () => {
         numCols={numCols}
         selectBox={selectBox}
       />
-      <h2>Generations: {grid}</h2>
+      <h2>Generations: {generation}</h2>
     </div>
   );
 };
