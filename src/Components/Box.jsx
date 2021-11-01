@@ -1,4 +1,3 @@
-
 import './Box.css';
 import {Grid} from './Grid';
 export const Box = ({ row, col, boxClass, id, selectBox }) => {

@@ -6,18 +6,21 @@ import { Grid } from "./Grid.jsx";
 const App = () => {
   const [generation, setGeneration] = useState(0);
   const [delay, setDelay] = useState(1000);
-  const [numRows, setnumRows] = useState(30);
-  const [numCols, setnumCols] = useState(50);
+  // const [grid.length, setnumRows] = useState(30);
+  // const [grid[i].length, setnumCols] = useState(50);
+  // const [dimesion,setDimension] = useState({grid.length,grid[i].length:50})
   const [isRunning, setIsRunning] = useState(true);
 
-  const defaultGrid = Array.from({ length: numRows }, () =>
-    Array.from({ length: numCols }, () => false)
+  const defaultGrid = Array.from({ length: 30 }, () =>
+    Array.from({ length: 30 }, () => false)
   );
+  const [grid, setGrid] = useState(defaultGrid);
 
   useInterval(
     () => {
       //Custom logic
-      Play();
+      play();
+      // seed();
     },
     isRunning ? delay : null
   );
@@ -49,19 +52,20 @@ const App = () => {
     }, [delay]);
   }
 
-  const [grid, setGrid] = useState(defaultGrid);
-
   const selectBox = (row, col) => {
     setGrid((prevGrid) => {
       prevGrid[row][col] = true;
       return prevGrid.map((row) => [...row]);
     });
   };
-  const Seed = (row, col) => {
-    for (let i = 0; i < numRows; i++) {
-      for (let j = 0; j < numCols; j++) {
+  const seed = (grid) => {
+    console.log(grid)
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[i].length; j++) {
+        console.log(grid.length,grid[i].length)
         if (Math.floor(Math.random() * 4) === 1) {
           setGrid((prevGrid) => {
+            console.log(prevGrid,i,j)
             prevGrid[i][j] = true;
             return prevGrid.map((i) => [...i]);
           });
@@ -69,27 +73,37 @@ const App = () => {
       }
     }
   };
-  const PlayButton = () => {
+
+  const playButton = () => {
     // const interval = setInterval(() => {
-    //   Play();
+    //   play();
     // }, delay);
     setIsRunning(true);
   };
-  const Play = () => {
+  useEffect(() => {
+    seed(grid);
+    playButton();
+    // return () => {
+    //   cleanup  `
+    // }
+  }, []);
+  const play = () => {
+    // seed();
     setGrid((grid) => {
-      var g2 = [...grid];
+      let g2 = [...grid];
 
-      for (let i = 0; i < numRows; i++) {
-        for (let j = 0; j < numCols; j++) {
+      for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
           let count = 0;
           if (i > 0) if (grid[i - 1][j]) count++;
           if (i > 0 && j > 0) if (grid[i - 1][j - 1]) count++;
-          if (i > 0 && j < numCols - 1) if (grid[i - 1][j + 1]) count++;
-          if (j < numCols - 1) if (grid[i][j + 1]) count++;
+          if (i > 0 && j < grid[i].length - 1) if (grid[i - 1][j + 1]) count++;
+          if (j < grid[i].length - 1) if (grid[i][j + 1]) count++;
           if (j > 0) if (grid[i][j - 1]) count++;
-          if (i < numRows - 1) if (grid[i + 1][j]) count++;
-          if (i < numRows - 1 && j > 0) if (grid[i + 1][j - 1]) count++;
-          if (i < numRows - 1 && numCols - 1) if (grid[i + 1][j + 1]) count++;
+          if (i < grid.length - 1) if (grid[i + 1][j]) count++;
+          if (i < grid.length - 1 && j > 0) if (grid[i + 1][j - 1]) count++;
+          if (i < grid.length - 1 && grid[i].length - 1)
+          if (grid[i + 1][j + 1]) count++;
           if (grid[i][j] && (count < 2 || count > 3)) g2[i][j] = false;
           if (!grid[i][j] && count === 3) g2[i][j] = true;
         }
@@ -98,54 +112,49 @@ const App = () => {
     });
     setGeneration((generation) => generation + 1);
   };
-  const PauseButton = () => {
+  const pauseButton = () => {
     setIsRunning(false);
   };
 
-  const Slow = () => {
+  const slow = () => {
     setDelay(1000);
-    PlayButton();
+    playButton();
   };
 
-  const Fast = () => {
+  const fast = () => {
     setDelay(10);
-    PlayButton();
+    playButton();
   };
 
-  const Clear = () => {
-    setGrid(
-      Array.from({ length: numRows }, () =>
-        Array.from({ length: numCols }, () => false)
-      )
+  const clear = (rows,cols) => {
+    console.log(rows,cols)
+    // setnumCols(cols);
+    // setnumRows(rows);
+    // console.log(grid.length, grid[i].length);
+    const newGrid = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, () => false)
     );
+    setGrid(newGrid);
+    seed(newGrid);
+    setGeneration(0);
   };
 
   const gridSize = (size) => {
     switch (size) {
       case "1":
-        setnumCols(20);
-        setnumRows(10);
+        clear(10,20) ;
         break;
       case "2":
-        setnumCols(50);
-        setnumRows(30);
+        clear(20,30);
         break;
       case "3":
-        setnumCols(70);
-        setnumRows(50);
+        clear(30,40) ;
         break;
       default:
         break;
     }
-    Clear();
   };
-  useEffect(() => {
-    Seed();
-    PlayButton();
-    // return () => {
-    //   cleanup
-    // }
-  }, []);
+
   // const handleSelect = (evt) => {
   //   gridSize(evt);
   // };
@@ -154,20 +163,15 @@ const App = () => {
     <div>
       <h1>Game Of Life</h1>
       <Buttons
-        PlayButton={PlayButton}
-        PauseButton={PauseButton}
-        Slow={Slow}
-        Fast={Fast}
-        Clear={Clear}
-        Seed={Seed}
+        playButton={playButton}
+        pauseButton={pauseButton}
+        slow={slow}
+        fast={fast}
+        clear={clear}
+        seed={seed}
         gridSize={gridSize}
       />
-      <Grid
-        setGrid={grid}
-        numRows={numRows}
-        numCols={numCols}
-        selectBox={selectBox}
-      />
+      <Grid grid={grid} selectBox={selectBox} />
       <h2>Generations: {generation}</h2>
     </div>
   );

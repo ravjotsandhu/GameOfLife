@@ -1,4 +1,5 @@
 import React from "react";
+import './Buttons.css';
 import {
   ButtonToolbar,
   Dropdown,
@@ -7,45 +8,41 @@ import {
 } from "react-bootstrap";
 export const Buttons = ({
   gridSize,
-  PlayButton,
-  PauseButton,
-  Clear,
-  Slow,
-  Fast,
-  Seed
+  playButton,
+  pauseButton,
+  clear,
+  slow,
+  fast,
+  seed
 }) => {
   const handleSelect = (evt) => {
     gridSize(evt);
   };
   return (
-    <div>
+    <div className="container">
       <ButtonToolbar>
-        <Button className="btn btn-default" onClick={PlayButton}>
+        <Button className="btn btn-default" onClick={playButton}>
           Play
         </Button>
-        <Button className="btn btn-default" onClick={PauseButton}>
+        <Button className="btn btn-default" onClick={pauseButton}>
           Pause
         </Button>
-        <Button className="btn btn-default" onClick={Clear}>
-          Clear
+        
+        <Button className="btn btn-default" onClick={slow}>
+          slow
         </Button>
-        <Button className="btn btn-default" onClick={Slow}>
-          Slow
+        <Button className="btn btn-default" onClick={fast}>
+          fast
         </Button>
-        <Button className="btn btn-default" onClick={Fast}>
-          Fast
-        </Button>
-        <Button className="btn btn-default" onClick={Seed}>
-          Seed
-        </Button>
+        
         <DropdownButton
           id="size-menu"
           title="Grid Size"
           onSelect={handleSelect}
         >
-          <Dropdown.Item eventKey="1">20x10</Dropdown.Item>
-          <Dropdown.Item eventKey="2">50x30</Dropdown.Item>
-          <Dropdown.Item eventKey="3">70x50</Dropdown.Item>
+          <Dropdown.Item eventKey="1">10x20</Dropdown.Item>
+          <Dropdown.Item eventKey="2">20x30</Dropdown.Item>
+          <Dropdown.Item eventKey="3">30x40</Dropdown.Item>
         </DropdownButton>
         {/* <Dropdown>
           <Dropdown.Toggle id="size-menu" onSelect={handleSelect}>

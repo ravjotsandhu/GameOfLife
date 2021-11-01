@@ -1,50 +1,36 @@
 import "./Grid.css";
 import { Box } from "./Box";
-export const Grid = ({ numRows, numCols, setGrid, selectBox }) => {
-  const boxes = setGrid.map((row, rowIndex) =>
-    row.map((col, colIndex) => {
-      return (
+// import React, { useState, useEffect, useRef } from "react";
+export const Grid = ({ grid, selectBox }) => {
+  let rowsArr = [];
+  let boxClass = "";
+  // console.log(numRows, numCols);
+
+  for (let i = 0; i <= grid.length - 1; i++) {
+    rowsArr[i] = [];
+
+    for (let j = 0; j <= grid[i].length - 1; j++) {
+      let boxId = i + "_" + j;
+      // console.log(grid[i][j]);
+      boxClass = grid[i][j] ? "box on" : "box off";
+      //pushing bunch of boxes onto array
+      rowsArr[i].push(
         <Box
-          id={`${rowIndex}_${colIndex}`}
-          key={`${rowIndex}_${colIndex}`}
-          boxClass={`box ${col ? "on" : "off"}`}
-          row={rowIndex}
-          col={colIndex}
+          boxClass={boxClass}
+          key={boxId}
+          boxId={boxId}
+          row={i}
+          col={j}
           selectBox={selectBox}
         />
       );
-    })
-  );
-
-  // const width = numCols;
-  // var rowsArr = [];
-  // var boxClass = "";
-
-  // for (var i = 0; i < numRows; i++) {
-  //   rowsArr[i] = [];
-
-  //   for (var j = 0; j < numCols; j++) {
-  //     let boxId = i + "_" + j;
-
-  //     boxClass = setGrid[i][j] ? "box on" : "box off";
-  //     //pushing bunch of boxes onto array
-  //     rowsArr[i].push(
-  //       <Box
-  //         boxClass={boxClass}
-  //         key={boxId}
-  //         boxId={boxId}
-  //         row={i}
-  //         col={j}
-  //         selectBox={selectBox}
-  //       />
-  //     );
-  //   }
-  // }
+    }
+  }
 
   return (
     <div className="grid">
-      {boxes.map((row, index) => (
-        <div key={`row_${index}`} className="row">
+      {rowsArr.map((row, index) => (
+        <div key={index} className="row">
           {row}
         </div>
       ))}
