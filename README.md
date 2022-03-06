@@ -5,3 +5,5 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Live Demo
 
 https://game-of-life-reactjs.netlify.app/
+
+PR By Prathamesh
